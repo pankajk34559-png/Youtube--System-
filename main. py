@@ -1,0 +1,22 @@
+import os
+import requests
+from gtts import gTTS
+
+def create_episode():
+    # AI se story mangwana
+    api_url = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct"
+    headers = {"Authorization": f"Bearer {os.getenv('HF_TOKEN')}"}
+    prompt = "Write a 1-hour long horror story script in Hindi like 'Aahat' with dialogues."
+   
+    response = requests.post(api_url, headers=headers, json={"inputs": prompt})
+    story_text = response.json()[0]['generated_text']
+   
+    # Audio Banana (Unlimited & Free)
+    tts = gTTS(text=story_text, lang='hi')
+    tts.save("episode.mp3")
+   
+    with open("script.txt", "w") as f:
+        f.write(story_text)
+
+if __name__ == "__main__":
+    create_episode()
